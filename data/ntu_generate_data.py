@@ -59,6 +59,7 @@ def seq_translation(data):
 
 
 def generate_data(data_path,
+                  action_list,
                   out_path,
                   ignore_sample_path=None,
                   benchmark='cv',
@@ -68,13 +69,22 @@ def generate_data(data_path,
             ignore_samples = [line.strip() + '.skeleton' for line in f.readlines()]
     else:
         ignore_samples = []
+
+    if action_list != None:
+        actions = np.loadtxt(arg.actions_list, dtype=np.int)
+    else:
+        actions = np.arange(1,61)
+
     sample_name = []
     sample_label = []
 
     for filename in os.listdir(data_path):
         if filename in ignore_samples:
             continue
-        action_class = int(filename[filename.find('A') + 1:filename.find('A') + 4])
+        elif int(filename[filename.find('A') + 1:filename.find('A') + 4]) not in actions:
+            continue
+
+        action_class = np.where(actions == int(filename[filename.find('A') + 1:filename.find('A') + 4]))[0][0]
         subject_id = int(filename[filename.find('P') + 1:filename.find('P') + 4])
         camera_id = int(filename[filename.find('C') + 1:filename.find('C') + 4])
 
@@ -94,7 +104,7 @@ def generate_data(data_path,
 
         if training:
             sample_name.append(filename)
-            sample_label.append(action_class - 1)
+            sample_label.append(action_class)
 
     if dataset == 'train':
         sample_name, val_name, sample_label, val_label = train_test_split(sample_name, sample_label, test_size=0.05,
@@ -134,7 +144,8 @@ def generate_data(data_path,
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='NTU-RGB+D Data.')
-    parser.add_argument('--data_path', default='data/NTU-RGB+D/nturgb+d_skeletons')
+    parser.add_argument('--data_path', default='/media/ntfs-data/datasets/ntu/nturgb+d_60_skeletons/')
+    parser.add_argument('--actions_list', default=None)
     parser.add_argument('--ignore_sample_path', default='data/samples_with_missing_skeletons.txt')
     parser.add_argument('--out_folder', default='data/NTU-RGB+D')
     benchmark = ['cs', 'cv']
@@ -146,6 +157,7 @@ if __name__ == '__main__':
             if not os.path.exists(out_path):
                 os.makedirs(out_path)
             generate_data(arg.data_path,
+                          arg.actions_list,
                           out_path,
                           arg.ignore_sample_path,
                           benchmark=b,

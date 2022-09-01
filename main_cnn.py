@@ -25,6 +25,7 @@ def str2bool(v):
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset_dir', default='data/', help='root directory for all datasets')
 parser.add_argument('--dataset_name', default='cv', help='dataset name')
+parser.add_argument('--cfg_dir', default='config/', help='root directory for params file')
 parser.add_argument('--save_dir', default='weights/', help='root directory for saving checkpoint models')
 parser.add_argument('--log_dir', default='logs/', help='root directory for train and test log')
 parser.add_argument('--model_name', default='vacnn', help='model name')
@@ -45,7 +46,7 @@ def main():
     model = VACNN()
 
     # pretrained model
-    resnet50 = torch.load('weights/resnet50.pth')
+    resnet50 = torch.load(args.save_dir + 'resnet50.pth')
     model_dict = model.state_dict()
     resnet50 = {'resnet_layer.' + k: v for k, v in resnet50.items() if 'resnet_layer.' + k in model_dict}
     model_dict.update(resnet50)
