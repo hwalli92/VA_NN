@@ -1,6 +1,6 @@
-## This is the pytorch implement of View Adaptive Neural Networks(VA_NN)
+## View Adaptive Neural Networks(VA_NN)
 
-You can also reference to [microsoft official code](https://github.com/microsoft/View-Adaptive-Neural-Networks-for-Skeleton-based-Human-Action-Recognition).
+This repo has been forked from the pytorch implementation of the View Adaptive Neural Networks for High Performance Skeleton-based Human Action Recognition, found here: https://github.com/jiamingNo1/VA_NN. This repo is for use as a submodule for the Lifelong Action Learning project (https://github.com/hwalli92/LAL-4-SARs)
 
 ### Prerequisites
 
